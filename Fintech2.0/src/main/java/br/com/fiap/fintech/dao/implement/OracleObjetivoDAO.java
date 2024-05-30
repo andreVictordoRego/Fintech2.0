@@ -25,7 +25,6 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	@Override
 	public void criarNovoObjetivo(Objetivo objetivo) throws DBException {
 	
-		
 		try {
 			
 			String sql = "INSERT INTO T_FNT_OBJTVO (CD_OBJETIVO, NR_CPF, NM_OBJETIVO, VL_OBJETIVO, VL_ATUAL, DT_CRIACAO, DT_CONCLUSAO, DS_OBJETIVO) VALUES (SQ_TB_OBJTVO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
@@ -44,11 +43,19 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			e.printStackTrace();
 			throw new DBException("Erro ao criar novo Objetivo.");
 		} finally {
-			try {
-				stmt.close();
-				conexao.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
+			if (stmt != null) {
+	            try {
+	                stmt.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+		            e.printStackTrace();
+		        }
 			}
 		}
 	}
@@ -82,11 +89,19 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				stmt.close();
-				conexao.close();
-			} catch(SQLException e) {
-				e.printStackTrace();
+			if (stmt != null) {
+	            try {
+	                stmt.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+		            e.printStackTrace();
+		        }
 			}
 		}
 		return lista;
@@ -97,7 +112,7 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 		
 		try {
 			
-			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ?";
+			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ? WHERE CD_OBJETIVO = ? AND CPF = ?";
 			
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, objetivo.getNomeDoObjetivo());
@@ -106,6 +121,8 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			stmt.setDate(4, Date.valueOf(objetivo.getDataDeCriacao()));
 			stmt.setDate(5, Date.valueOf(objetivo.getDataDeConclusao()));
 			stmt.setString(6, objetivo.getDescricaoDoObjetivo());
+			stmt.setInt(7, objetivo.getCodigoDoObjetivo());
+			stmt.setInt(8, usuario.getNumeroDeCPF());
 			
 			stmt.executeUpdate();
 			
@@ -113,15 +130,22 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			e.printStackTrace();
 			throw new DBException("Erro ao editar o Objetivo.");
 		} finally {
-			try {
-				conexao.close();
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if (stmt != null) {
+	            try {
+	                stmt.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+		            e.printStackTrace();
+		        }
 			}
 		}
 	}
-
 	
 	@Override
 	public void excluirObjetivo(String nomeDoObjetivo) throws DBException {
@@ -139,11 +163,19 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			e.printStackTrace();
 			throw new DBException("Erro ao remover Objetivo.");
 		} finally {
-			try {
-				stmt.close();
-				conexao.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if (stmt != null) {
+	            try {
+	                stmt.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+		            e.printStackTrace();
+		        }
 			}
 		}
 	}

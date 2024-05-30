@@ -62,8 +62,13 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        
 	        stmtLogin = conexao.prepareStatement(sqlLogin);
 	        stmtLogin.setInt(1, usuario.getNumeroDeCPF());
-	        stmtLogin.setString(2, usuario.getSenha());
-
+	        
+	        if (isSenhaValida(usuario.getSenha())) {
+	        	stmtLogin.setString(2, usuario.getSenha());
+	        } else {
+	        	throw new DBException("Senha Invalida.");
+	        }
+	       
 	        stmtLogin.executeUpdate();
 	        
 	        conexao.commit();
@@ -152,46 +157,53 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 		}
 	}
 		
-	@Override
-	public void alterarSenhaDoUsuario(String novaSenha) {
-
-		try {
-			
-			String sql = "UPDATE T_FNT_USUARIO SET TX_SENHA = ? WHERE NR_CPF = ?";
-			stmt = conexao.prepareStatement(sql);
-			
-			stmt.setString(1, usuario.setSenha(novaSenha));
-			stmt.setInt(2, usuario.getNumeroDeCPF());
-			
-			stmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			
-		} finally {
-				if (stmt != null) {
-		            try {
-		                stmt.close();
-		            } catch (SQLException e) {
-		                e.printStackTrace();
-		            }
-		        }
-				if (conexao != null) {
-					try {
-						conexao.close();
-					} catch (SQLException e) {
-			            e.printStackTrace();
-			        }
-				}
-			}
-		}
-
-
+	
 	@Override
 	public boolean isSenhaValida(String senhaParaValidacao) {
 		String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";
 	    return senhaParaValidacao != null && senhaParaValidacao.matches(regex);
 		
 	}
+	
+	@Override
+	public void alterarSenhaDoUsuario(String novaSenha) {
+
+		if (isSenhaValida(novaSenha)) {
+			
+			try {
+				
+				String sql = "UPDATE T_FNT_LOGIN SET TX_SENHA = ? WHERE NR_CPF = ?";
+				stmt = conexao.prepareStatement(sql);
+				
+				stmt.setString(1, usuario.setSenha(novaSenha));
+				stmt.setInt(2, usuario.getNumeroDeCPF());
+				
+				stmt.executeUpdate();
+				
+			} catch (SQLException e) {
+				
+			} finally {
+					if (stmt != null) {
+			            try {
+			                stmt.close();
+			            } catch (SQLException e) {
+			                e.printStackTrace();
+			            }
+			        }
+					if (conexao != null) {
+						try {
+							conexao.close();
+						} catch (SQLException e) {
+				            e.printStackTrace();
+				        }
+					}
+				}
+			} else {
+				throw new DBException("Senha Invalida.");
+			}
+		}
+
+	
 
 //***************************************************************************************
 

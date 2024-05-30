@@ -86,6 +86,7 @@ public class Usuario {
 	}
 
 	public void setSenha(String senha) {
+		
 		try { 
 			
 			this.senha = CriptografiaUtils.criptografar(senha);
