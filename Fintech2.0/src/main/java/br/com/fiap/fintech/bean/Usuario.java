@@ -1,7 +1,9 @@
 package br.com.fiap.fintech.bean;
 
 import java.io.File;
+
 import java.time.LocalDate;
+import br.com.fiap.fintech.util.CriptografiaUtils;
 
 public class Usuario {
 
@@ -28,7 +30,7 @@ public class Usuario {
 		this.genero = genero;
 		this.email = email;
 		this.imagemFoto = imagemFoto;
-		this.senha = senha;
+		setSenha(senha);
 	}
 
 	public Integer getNumeroDeCPF() {
@@ -84,7 +86,13 @@ public class Usuario {
 	}
 
 	public void setSenha(String senha) {
-		this.senha = senha;
+		try { 
+			
+			this.senha = CriptografiaUtils.criptografar(senha);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	

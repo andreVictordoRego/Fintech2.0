@@ -17,15 +17,16 @@ import br.com.fiap.fintech.singleton.ConnectionManager;
 
 public class OracleObjetivoDAO implements ObjetivoDAO{
 
-	private Connection conexao;
+	private Connection conexao = ConnectionManager.getInstance().getConnection();
+	private PreparedStatement stmt;
+	private ResultSet rs;
+	
 	
 	@Override
-	public void criarNovoObjetivo(Objetivo objetivo, Usuario usuario) throws DBException {
-		
-		PreparedStatement stmt = null;
+	public void criarNovoObjetivo(Objetivo objetivo) throws DBException {
+	
 		
 		try {
-			conexao = ConnectionManager.getInstance().getConnection();
 			
 			String sql = "INSERT INTO T_FNT_OBJTVO (CD_OBJETIVO, NR_CPF, NM_OBJETIVO, VL_OBJETIVO, VL_ATUAL, DT_CRIACAO, DT_CONCLUSAO, DS_OBJETIVO) VALUES (SQ_TB_OBJTVO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = conexao.prepareStatement(sql);
@@ -50,19 +51,15 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 	@Override
-	public List<Objetivo> listarObjetivos(Usuario usuario) {
+	public List<Objetivo> listarObjetivos() {
 		
 		List<Objetivo> lista = new ArrayList<Objetivo>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		Objetivo objetivo = new Objetivo();
 		
 		try {
-			
-			conexao = ConnectionManager.getInstance().getConnection();
 			
 			String sql = "SELECT * FROM T_FNT_OBJTVO WHERE NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
@@ -71,20 +68,15 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
-				Integer codigo = rs.getInt("CD_OBJETIVO");
-				String nome = rs.getString("NM_OBJETIVO");
-				Double valor = rs.getDouble("VL_OBJETIVO");
-				Double valorAtual = rs.getDouble("VL_ATUAL");
-				Date dtCriacao = rs.getDate("DT_CRIACAO");
-				LocalDate dtCriacaoLocal = dtCriacao.toLocalDate();
-				Date dtConclusao = rs.getDate("DT_CONCLUSAO");
-				LocalDate dtConclusaoLocal = dtConclusao.toLocalDate();
-				String descricao = rs.getString("DS_OBJETIVO");
-				
-				Objetivo objetivo = new Objetivo(codigo, nome, valor, valorAtual, dtCriacaoLocal, dtConclusaoLocal, descricao);
+				objetivo.setCodigoDoObjetivo(rs.getInt("CD_OBJETIVO")); 
+				objetivo.setNomeDoObjetivo(rs.getString("NM_OBJETIVO"));
+				objetivo.setValorDoObjetivo(rs.getDouble("VL_OBJETIVO"));
+				objetivo.setValorAtual(rs.getDouble("VL_ATUAL"));
+				objetivo.setDataDeCriacao(rs.getDate("DT_CRIACAO").toLocalDate());
+				objetivo.setDataDeConclusao(rs.getDate("DT_CONCLUSAO").toLocalDate());
+				objetivo.setDescricaoDoObjetivo(rs.getString("DS_OBJETIVO"));
 				
 				lista.add(objetivo);
-				
 			}
 			
 		} catch(Exception e) {
@@ -103,11 +95,8 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	@Override
 	public void editarObjetivo(Objetivo objetivo) throws DBException {
 		
-		PreparedStatement stmt = null;
-		
 		try {
 			
-			conexao = ConnectionManager.getInstance().getConnection();
 			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ?";
 			
 			stmt = conexao.prepareStatement(sql);
@@ -117,6 +106,8 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			stmt.setDate(4, Date.valueOf(objetivo.getDataDeCriacao()));
 			stmt.setDate(5, Date.valueOf(objetivo.getDataDeConclusao()));
 			stmt.setString(6, objetivo.getDescricaoDoObjetivo());
+			
+			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -131,17 +122,17 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 		}
 	}
 
+	
 	@Override
 	public void excluirObjetivo(String nomeDoObjetivo) throws DBException {
 		
-		PreparedStatement stmt = null;
-		
 		try {
-			conexao = ConnectionManager.getInstance().getConnection();
-			String sql = "DELETE FROM T_FNT_OBJTVO WHERE NM_OBJETIVO = ?";
+			
+			String sql = "DELETE FROM T_FNT_OBJTVO WHERE NM_OBJETIVO = ? AND NR_CPF = ?";
 			
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, nomeDoObjetivo);
+			stmt.setInt(2, usuario.getNumeroDeCPF());
 			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
@@ -155,11 +146,5 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 				e.printStackTrace();
 			}
 		}
-
-	
-		
 	}
-
-
-
 }

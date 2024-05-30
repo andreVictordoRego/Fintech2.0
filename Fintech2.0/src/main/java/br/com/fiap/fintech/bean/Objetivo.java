@@ -11,7 +11,7 @@ public class Objetivo {
 	private LocalDate dataDeCriacao;
 	private LocalDate dataDeConclusao;
 	private String descricaoDoObjetivo;
-	
+	private Integer chaveEstrangeira;
 	
 	
 	public Objetivo() {
@@ -85,6 +85,14 @@ public class Objetivo {
 
 	public void setDescricaoDoObjetivo(String descricaoDoObjetivo) {
 		this.descricaoDoObjetivo = descricaoDoObjetivo;
+	}
+
+	public Integer getChaveEstrangeira() {
+		return chaveEstrangeira;
+	}
+
+	public void setChaveEstrangeira(Integer chaveEstrangeira) {
+		this.chaveEstrangeira = chaveEstrangeira;
 	}
 	
 	
