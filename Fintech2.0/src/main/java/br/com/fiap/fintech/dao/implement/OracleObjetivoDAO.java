@@ -103,10 +103,60 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	@Override
 	public void editarObjetivo(Objetivo objetivo) throws DBException {
 		
+		PreparedStatement stmt = null;
+		
+		try {
+			
+			conexao = ConnectionManager.getInstance().getConnection();
+			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ?";
+			
+			stmt = conexao.prepareStatement(sql);
+			stmt.setString(1, objetivo.getNomeDoObjetivo());
+			stmt.setDouble(2, objetivo.getValorDoObjetivo());
+			stmt.setDouble(3, objetivo.getValorAtual());
+			stmt.setDate(4, Date.valueOf(objetivo.getDataDeCriacao()));
+			stmt.setDate(5, Date.valueOf(objetivo.getDataDeConclusao()));
+			stmt.setString(6, objetivo.getDescricaoDoObjetivo());
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException("Erro ao editar o Objetivo.");
+		} finally {
+			try {
+				conexao.close();
+				stmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
-	public void excluirObjetivo(String nomeDoObjetivo) {
+	public void excluirObjetivo(String nomeDoObjetivo) throws DBException {
+		
+		PreparedStatement stmt = null;
+		
+		try {
+			conexao = ConnectionManager.getInstance().getConnection();
+			String sql = "DELETE FROM T_FNT_OBJTVO WHERE NM_OBJETIVO = ?";
+			
+			stmt = conexao.prepareStatement(sql);
+			stmt.setString(1, nomeDoObjetivo);
+			stmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DBException("Erro ao remover Objetivo.");
+		} finally {
+			try {
+				stmt.close();
+				conexao.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+	
 		
 	}
 

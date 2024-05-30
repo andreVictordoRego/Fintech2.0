@@ -11,5 +11,5 @@ public interface ObjetivoDAO {
 	public void criarNovoObjetivo(Objetivo objetivo, Usuario usuario) throws DBException;
 	public List<Objetivo> listarObjetivos(Usuario usuario);
 	public void editarObjetivo(Objetivo objetivo) throws DBException;
-	public void excluirObjetivo(String nomeDoObjetivo);
+	public void excluirObjetivo(String nomeDoObjetivo) throws DBException;
 }
