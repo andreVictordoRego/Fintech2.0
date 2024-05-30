@@ -17,7 +17,8 @@ import br.com.fiap.fintech.singleton.ConnectionManager;
 public class OracleInvestimentoDAO implements InvestimentoDAO{
 	
 	private Connection conexao;
-	
+
+	@Override	
 	public void cadastrarNovoInvestimento(Investimento investimento) throws DBException{
 		PreparedStatement stmt = null;
 		
@@ -45,6 +46,7 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 		}
 	}
 	
+	@Override
 	public List<Investimento> listarInvestimentos(){
 		List<Investimento> lista = new ArrayList<Investimento>();
 		PreparedStatement stmt = null;
@@ -84,7 +86,7 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 		return lista;
 	}
 
-	
+	@Override
 	public void editarInvestimento(Investimento investimento) throws DBException{
 		PreparedStatement stmt = null;
 		
@@ -110,6 +112,8 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 		}
 	}
 	
+	
+	@Override
 	public void excluirInvestimento(String nomeDoInvestimento) {
 		PreparedStatement stmt = null;
 		
@@ -131,6 +135,7 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 		}
 	}
 	
+	@Override
 	public Boolean fecharInvestimento(Integer codigoDoInvestimento) {
 		
 	}
