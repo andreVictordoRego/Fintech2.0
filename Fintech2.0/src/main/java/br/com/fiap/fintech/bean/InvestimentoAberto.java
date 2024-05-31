@@ -6,6 +6,7 @@ public class InvestimentoAberto {
 	
 	private LocalDate mes;
 	private Double valorTotalDoRendimento;
+	private Integer chavePrimariaEstrantrangeira;
 	
 	public InvestimentoAberto() {
 		super();
@@ -32,4 +33,21 @@ public class InvestimentoAberto {
 	public void setValorTotalDoRendimento(Double valorTotalDoRendimento) {
 		this.valorTotalDoRendimento = valorTotalDoRendimento;
 	}
+
+	public Integer getChavePrimariaEstrantrangeira() {
+		return chavePrimariaEstrantrangeira;
+	}
+
+	public void setChavePrimariaEstrantrangeira(Integer chavePrimariaEstrantrangeira) {
+		this.chavePrimariaEstrantrangeira = chavePrimariaEstrantrangeira;
+	}
+	
+	@Override
+    public String toString() {
+        return "Investimento Aberto{" +
+                "Data de abertura = " + mes +
+                ", Valor total de rendimento = " + valorTotalDoRendimento +
+                '}';
+    }
+	
 }

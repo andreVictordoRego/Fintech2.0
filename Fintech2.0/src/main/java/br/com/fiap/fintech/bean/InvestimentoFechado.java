@@ -6,6 +6,7 @@ public class InvestimentoFechado {
 	
 	private LocalDate dataDeSaida;
 	private Double valorDaLiquidez;
+	private Integer chavePrimariaEstrantrangeira;
 	
 	public InvestimentoFechado() {
 		super();
@@ -32,4 +33,21 @@ public class InvestimentoFechado {
 	public void setValorDaLiquidez(Double valorDaLiquidez) {
 		this.valorDaLiquidez = valorDaLiquidez;
 	}
+
+	public Integer getChavePrimariaEstrantrangeira() {
+		return chavePrimariaEstrantrangeira;
+	}
+
+	public void setChavePrimariaEstrantrangeira(Integer chavePrimariaEstrantrangeira) {
+		this.chavePrimariaEstrantrangeira = chavePrimariaEstrantrangeira;
+	}
+	
+	 @Override
+	    public String toString() {
+	        return "Investimento Fechado{" +
+	                "Data do Fechamento = " + dataDeSaida +
+	                ", Valor líquido da aplicação = " + valorDaLiquidez +
+	                '}';
+	    }
+	
 }

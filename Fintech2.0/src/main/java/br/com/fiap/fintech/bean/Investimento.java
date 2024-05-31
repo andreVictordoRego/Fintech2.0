@@ -13,6 +13,8 @@ public class Investimento {
 	private LocalDate dataDeVencimento;
 	private Double valorDeInvestimento;
 	private Integer chaveEstrangeira;
+	private InvestimentoAberto investimentoAberto;
+	private InvestimentoFechado investimentoFechado;
 
 	public Investimento() {
 		super();
@@ -94,5 +96,31 @@ public class Investimento {
 
 	public void setValorDeInvestimento(Double valorDeInvestimento) {
 		this.valorDeInvestimento = valorDeInvestimento;
+	}
+
+	public Integer getChaveEstrangeira() {
+		return chaveEstrangeira;
+	}
+
+	public void setChaveEstrangeira(Integer chaveEstrangeira) {
+		this.chaveEstrangeira = chaveEstrangeira;
+	}
+
+	public InvestimentoAberto getInvestimentoAberto() {
+		return investimentoAberto;
+	}
+
+	public void setInvestimentoAberto(InvestimentoAberto investimentoAberto) {
+		this.investimentoAberto = investimentoAberto;
+	}
+
+	public InvestimentoFechado getInvestimentoFechado() {
+		return investimentoFechado;
+	}
+
+	public void setInvestimentoFechado(InvestimentoFechado investimentoFechado) {
+		this.investimentoFechado = investimentoFechado;
 	}	
+	
+	
 }
