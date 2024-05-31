@@ -12,6 +12,7 @@ public class Investimento {
 	private LocalDate dataDeEntrada;
 	private LocalDate dataDeVencimento;
 	private Double valorDeInvestimento;
+	private Integer chaveEstrangeira;
 
 	public Investimento() {
 		super();

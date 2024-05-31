@@ -16,13 +16,14 @@ import br.com.fiap.fintech.singleton.ConnectionManager;
 
 public class OracleInvestimentoDAO implements InvestimentoDAO{
 	
-	private Connection conexao;
+	private Connection conexao  = ConnectionManager.getInstance().getConnection();
+	private PreparedStatement stmt;
+	private ResultSet rs;
 	
+	@Override
 	public void cadastrarNovoInvestimento(Investimento investimento) throws DBException{
-		PreparedStatement stmt = null;
 		
 		try {
-			conexao = ConnectionManager.getInstance().getConnection();
 			String sql = "INSERT INTO T_FNT_INVEST (CD_INVESTIMENTO, NR_CPF, VL_RENTABILIDADE, DT_ENTRADA, DT_VENCIMENTO, VL_INVESTIMENTO, NM_APLICACAO) VALUES (SQ_TB_INVEST.NEXTVAL, ?, ?, ?, ?, ?, ?)";
 			stmt = conexao.prepareStatement(sql);
 			stmt.setInteger(1, usuario.getNumeroDeCPF());
@@ -31,6 +32,8 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 			stmt.setDate(4, Date.valueOf(investimento.getDataDeVencimento()));
 			stmt.setDouble(5, investimento.getValorDeInvestimento());
 			stmt.setString(6, investimento.getNomeDoInvestimento());
+			
+			stmt.executeUpdate();
 						
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -45,14 +48,17 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 		}
 	}
 	
+	@Override
 	public List<Investimento> listarInvestimentos(){
-		List<Investimento> lista = new ArrayList<Investimento>();
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
+		List<Investimento> lista = new ArrayList<Investimento>();		
 		
 		try {
 			conexao = ConnectionManager.getInstance().getConnection();
-			stmt = conexao.prepareStatement("SELECT * FROM T_FNT_INVEST INNER JOIN T_FNT_USUARIO ON T_FNT_INVEST.NR_CPF = T_FNT_USUARIO.NR_CPF");
+			stmt = conexao.prepareStatement("SELECT * FROM T_FNT_INVEST WHERE NR_CPF = ?");
+			stmt.setInt(1, usuario.getNumeroDoCPF);
+			
+			Investimento investimento = new Investimento();
+			
 			rs = stmt.executeQuery();
 			
 			while(rs.next()) {
@@ -64,9 +70,6 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 				LocalDate dtVencimentoLocal = dtVencimento.toLocalDate();
 				Double vlInvestimento = rs.getDouble("VL_INVESTIMENTO");
 				String nomeAplicacao = rs.getString("NM_APLICACAO");
-				
-				
-				Investimento investimento = new Investimento(codigo, vlRentabilidade, dtEntradaLocal, dtVencimentoLocal, vlInvestimento, nomeAplicacao);
 				
 				lista.add(investimento);				
 			}
@@ -86,7 +89,6 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 
 	
 	public void editarInvestimento(Investimento investimento) throws DBException{
-		PreparedStatement stmt = null;
 		
 		try {
 			conexao = ConnectionManager.getInstance().getConnection();
@@ -111,13 +113,13 @@ public class OracleInvestimentoDAO implements InvestimentoDAO{
 	}
 	
 	public void excluirInvestimento(String nomeDoInvestimento) {
-		PreparedStatement stmt = null;
 		
 		try {
 			conexao = ConnectionManager.getInstance().getConnection();
-			String sql = "DELETE FROM T_FNT_INVEST WHERE NM_APLICACAO = ?";
+			String sql = "DELETE FROM T_FNT_INVEST WHERE NM_APLICACAO = ? AND NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, nomeDoInvestimento);
+			stmt.setInteger(2, usuario.getNumeroCPF);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
