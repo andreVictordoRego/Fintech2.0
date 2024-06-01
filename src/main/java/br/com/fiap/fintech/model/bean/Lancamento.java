@@ -1,13 +1,14 @@
 package br.com.fiap.fintech.model.bean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Lancamento {
 
 	private Integer codigoDoLancamento;
-	private Integer numeroDoCPF;
+	private Long numeroDoCPF;
 	private LocalDate dtDoLancamento;
-	private LocalDate hrDoLancamento;
+	private LocalDateTime hrDoLancamento;
 	private Double vlDoLancamento;
 	private String dsDoLancamento;
 	
@@ -15,8 +16,8 @@ public class Lancamento {
 		
 	}
 	
-	public Lancamento(Integer codigoDoLancamento, Integer numeroDoCPF, LocalDate dtDoLancamento,
-			LocalDate hrDoLancamento, Double vlDoLancamento, String dsDoLancamento) {
+	public Lancamento(Integer codigoDoLancamento, Long numeroDoCPF, LocalDate dtDoLancamento,
+			LocalDateTime hrDoLancamento, Double vlDoLancamento, String dsDoLancamento) {
 		this.codigoDoLancamento = codigoDoLancamento;
 		this.numeroDoCPF = numeroDoCPF;
 		this.dtDoLancamento = dtDoLancamento;
@@ -33,11 +34,11 @@ public class Lancamento {
 		this.codigoDoLancamento = codigoDoLancamento;
 	}
 
-	public Integer getNumeroDoCPF() {
+	public Long getNumeroDoCPF() {
 		return numeroDoCPF;
 	}
 
-	public void setNumeroDoCPF(Integer numeroDoCPF) {
+	public void setNumeroDoCPF(Long numeroDoCPF) {
 		this.numeroDoCPF = numeroDoCPF;
 	}
 
@@ -49,11 +50,11 @@ public class Lancamento {
 		this.dtDoLancamento = dtDoLancamento;
 	}
 
-	public LocalDate getHrDoLancamento() {
+	public LocalDateTime getHrDoLancamento() {
 		return hrDoLancamento;
 	}
 
-	public void setHrDoLancamento(LocalDate hrDoLancamento) {
+	public void setHrDoLancamento(LocalDateTime hrDoLancamento) {
 		this.hrDoLancamento = hrDoLancamento;
 	}
 

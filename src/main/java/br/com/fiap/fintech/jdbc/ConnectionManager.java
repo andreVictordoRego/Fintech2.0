@@ -22,7 +22,7 @@ public class ConnectionManager {
 	public static Connection getConnection() {
 		Connection connection = null;
 			try {
-				connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:XE", "SYSTEM", "");
+				connection = DriverManager.getConnection("jdbc:oracle:thin:@//localhost:1521/XE", "SYSTEM", "3461092");
 				return connection;
 			} catch (SQLException e) {
 				System.err.println("Erro ao conectar no banco de dados.");

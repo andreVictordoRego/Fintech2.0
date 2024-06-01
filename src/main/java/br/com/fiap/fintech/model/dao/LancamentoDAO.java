@@ -16,40 +16,39 @@ public class LancamentoDAO {
 	private PreparedStatement pstmt;
 	private ResultSet resultSet;
 	
-	public void cadastrarNovoLancamento(Lancamento lancamento) throws SQLException {
-		conexao.setAutoCommit(false);
+	public void cadastrarNovoLancamento(Lancamento lancamento) {
 		String sqlQuery = "INSERT INTO T_FNT_LANTO("
-				+ "SQ_LANC.NEXTVAL, nr_cpf, dt_lancamento, hr_lancamento, vl_lancamento, tx_descricao) "
-				+ "VALUES(?, ?, ?, ?, ?, ?)";
+				+ "cd_lancamento, nr_cpf, dt_lancamento, hr_lancamento, vl_lancamento, ds_lancamento) "
+				+ "VALUES(SQ_LANTO.NEXTVAL, ?, ?, ?, ?, ?)";
 		
 		try {
 			pstmt = conexao.prepareStatement(sqlQuery);
-			pstmt.setInt(1, lancamento.getNumeroDoCPF());
+			pstmt.setLong(1, lancamento.getNumeroDoCPF());
 			pstmt.setDate(2, java.sql.Date.valueOf(lancamento.getDtDoLancamento()));
-			pstmt.setDate(3, java.sql.Date.valueOf(lancamento.getHrDoLancamento()));
+			pstmt.setTimestamp(3, java.sql.Timestamp.valueOf(lancamento.getHrDoLancamento()));
 			pstmt.setDouble(4, lancamento.getVlDoLancamento());
 			pstmt.setString(5, lancamento.getDsDoLancamento());
 			pstmt.executeUpdate();
-			conexao.commit();
 		} catch(SQLException e) {
-			conexao.rollback();
+			System.err.println("Erro ao cadastrar lancamento.");
+			e.printStackTrace();
 		} 
 	}
 	
 	public void atualizarLancamento(Lancamento lancamento) throws SQLException {
 		conexao.setAutoCommit(false);
 		String sqlQuery = "UPDATE T_FNT_LANTO "
-				+ "SET dt_lancamento = ?, hr_lancamento = ?, vl_lancamento = ?, tx_descricao = ? "
+				+ "SET dt_lancamento = ?, hr_lancamento = ?, vl_lancamento = ?, ds_lancamento = ? "
 				+ "WHERE cd_lancamento = ? AND nr_cpf = ?";
 		
 		try {
 			pstmt = conexao.prepareStatement(sqlQuery);
 			pstmt.setDate(1, java.sql.Date.valueOf(lancamento.getDtDoLancamento()));
-			pstmt.setDate(2, java.sql.Date.valueOf(lancamento.getHrDoLancamento()));
+			pstmt.setTimestamp(2, java.sql.Timestamp.valueOf(lancamento.getHrDoLancamento()));
 			pstmt.setDouble(3, lancamento.getVlDoLancamento());
 			pstmt.setString(4, lancamento.getDsDoLancamento());
 			pstmt.setInt(5,lancamento.getCodigoDoLancamento());
-			pstmt.setInt(6, lancamento.getNumeroDoCPF());
+			pstmt.setLong(6, lancamento.getNumeroDoCPF());
 			pstmt.executeUpdate();
 			
 		} catch(SQLException e) {
@@ -71,14 +70,14 @@ public class LancamentoDAO {
 			while(resultSet.next()) {
 				lancamento.setCodigoDoLancamento(resultSet.getInt("cd_lancamento"));
 				lancamento.setDtDoLancamento(resultSet.getDate("dt_lancamento").toLocalDate());
-				lancamento.setHrDoLancamento(resultSet.getDate("hr_lancamento").toLocalDate());
+				lancamento.setHrDoLancamento(resultSet.getTimestamp("hr_lancamento").toLocalDateTime());
 				lancamento.setVlDoLancamento(resultSet.getDouble("vl_lancamento"));
-				lancamento.setDsDoLancamento(resultSet.getString("tx_descricao"));
+				lancamento.setDsDoLancamento(resultSet.getString("ds_lancamento"));
 				lancamentos.add(lancamento);
 			}
 			
 		} catch(SQLException e) {
-			
+			System.err.println("");
 		}
 		
 		return lancamentos;
