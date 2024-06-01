@@ -2,7 +2,7 @@ package br.com.fiap.fintech.model.bean;
 
 import java.time.LocalDate;
 
-public abstract class Lancamento {
+public class Lancamento {
 
 	private Integer codigoDoLancamento;
 	private Integer numeroDoCPF;
