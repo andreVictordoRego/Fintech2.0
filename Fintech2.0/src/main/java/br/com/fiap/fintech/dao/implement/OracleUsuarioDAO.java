@@ -1,6 +1,6 @@
 package br.com.fiap.fintech.dao.implement;
 
-import java.io.File;
+import java.io.File; 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,15 +17,23 @@ import br.com.fiap.fintech.exception.DBException;
 import br.com.fiap.fintech.singleton.ConnectionManager;
 import java.io.InputStream;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
 public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 
-	private Connection conexao = ConnectionManager.getInstance().getConnection();
+
+	private Connection conexao;
 	private PreparedStatement stmt;
 	private ResultSet rs;
 	
 	@Override
 	public void cadastrarNovoUsuario(Usuario usuario) throws DBException, SQLException {
 
+		conexao = ConnectionManager.getInstance().getConnection();
+		
 	    String sqlUsuario = "INSERT INTO T_FNT_USUARIO (NR_CPF, NM_COMPLETO, DT_NASCIMENTO, DS_GENERO, TX_EMAIL, IM_FOTO) VALUES (?, ?, ?, ?, ?, ?)";
 	    String sqlLogin = "INSERT INTO T_FNT_LOGIN (NR_CPF, TX_SENHA) VALUES (?, ?)";
 	    
@@ -46,7 +54,8 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        File arquivoImagem = usuario.getImagemFoto();
 	        if (arquivoImagem != null) {
 	            try (InputStream inputStream = new FileInputStream(arquivoImagem)) {
-	                stmtUsuario.setBinaryStream(6, inputStream, (int) arquivoImagem.length());
+	                stmtUsuario.setBinaryStream(6, inputStream);
+	            	//stmtUsuario.setBinaryStream(6, inputStream, (int) arquivoImagem.length());
 	            } catch (FileNotFoundException e) {
 	                e.printStackTrace();
 	                throw new DBException("Erro ao carregar o arquivo de imagem.", e);
@@ -57,22 +66,19 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        } else {
 	            stmtUsuario.setNull(6, java.sql.Types.BLOB);
 	        }
-
-	        stmtUsuario.executeUpdate();
 	        
 	        stmtLogin = conexao.prepareStatement(sqlLogin);
 	        stmtLogin.setInt(1, usuario.getNumeroDeCPF());
 	        
 	        if (isSenhaValida(usuario.getSenha())) {
 	        	stmtLogin.setString(2, usuario.getSenha());
+	        	
+	        	stmtUsuario.executeUpdate();
+	        	stmtLogin.executeUpdate();
 	        } else {
 	        	throw new DBException("Senha Invalida.");
 	        }
-	       
-	        stmtLogin.executeUpdate();
-	        
 	        conexao.commit();
-
 	    } catch (SQLException e) {
 	        conexao.rollback();
 	        e.printStackTrace();
@@ -101,14 +107,12 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	    }
 	}
 
-
-	
-
 	@Override
 	public void editarCadastroDoUsuario(Usuario usuario) throws DBException {
 
+	conexao = ConnectionManager.getInstance().getConnection();
+		
 	try {
-			
 			String sql = "UPDATE T_FNT_USUARIO SET NM_COMPLETO = ?, DT_NASCIMENTO = ?, DS_GENERO = ?, TX_EMAIL = ?, IM_FOTO = ? WHERE NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
 			
@@ -133,9 +137,7 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        }	
 	        
 	        stmt.setInt(6, usuario.getNumeroDeCPF());
-			
 			stmt.executeUpdate();
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new DBException("Erro ao editar o Cadastro do Usuario.");
@@ -157,7 +159,6 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 		}
 	}
 		
-	
 	@Override
 	public boolean isSenhaValida(String senhaParaValidacao) {
 		String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";
@@ -166,16 +167,18 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	}
 	
 	@Override
-	public void alterarSenhaDoUsuario(String novaSenha) {
-
+	public void alterarSenhaDoUsuario(String novaSenha, Usuario usuario) throws DBException {
+		
+		conexao = ConnectionManager.getInstance().getConnection();
+		
 		if (isSenhaValida(novaSenha)) {
 			
 			try {
-				
 				String sql = "UPDATE T_FNT_LOGIN SET TX_SENHA = ? WHERE NR_CPF = ?";
+
 				stmt = conexao.prepareStatement(sql);
-				
-				stmt.setString(1, usuario.setSenha(novaSenha));
+				usuario.setSenha(novaSenha);
+				stmt.setString(1, usuario.getSenha());
 				stmt.setInt(2, usuario.getNumeroDeCPF());
 				
 				stmt.executeUpdate();
@@ -203,8 +206,65 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 			}
 		}
 
-	
+//***************************************************************************************
+	  public void salvarImagemDoBanco(String caminhoDestino, Usuario usuario) throws DBException {
+	        Connection conexao = null;
+	        PreparedStatement stmt = null;
+	        ResultSet rs = null;
 
+	        try {
+	            conexao = ConnectionManager.getInstance().getConnection();
+
+	            String sql = "SELECT IM_FOTO FROM T_FNT_USUARIO WHERE NR_CPF = ?";
+	            stmt = conexao.prepareStatement(sql);
+
+	            stmt.setInt(1, usuario.getNumeroDeCPF());
+
+	            rs = stmt.executeQuery();
+	            
+	            if (rs.next()) {
+	                byte[] imagemBytes = rs.getBytes("IM_FOTO");
+	                if (imagemBytes != null) {
+	                    File fileDestino = new File(caminhoDestino);
+	                    try (OutputStream outputStream = new FileOutputStream(fileDestino)) {
+	                        outputStream.write(imagemBytes);
+	                        System.out.println("Imagem salva com sucesso em: " + caminhoDestino);
+	                    }
+	                } else {
+	                    System.out.println("Nenhum imagem cadastrado no CPF: " + usuario.getNumeroDeCPF());
+	                }
+	            } else {
+	                System.out.println("Usuário com CPF " + usuario.getNumeroDeCPF() + " não encontrado.");
+	            }
+	        } catch (SQLException | IOException e) {
+	            e.printStackTrace();
+	            throw new DBException("Erro ao salvar imagem do banco.", e);
+	        } finally {
+	            if (rs != null) {
+	                try {
+	                    rs.close();
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	            if (stmt != null) {
+	                try {
+	                    stmt.close();
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	            if (conexao != null) {
+	                try {
+	                    conexao.close();
+	                } catch (SQLException e) {
+	                    e.printStackTrace();
+	                }
+	            }
+	        }
+	    }
+	
+	
 //***************************************************************************************
 
 	@Override
@@ -213,9 +273,6 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 		// e depois verificar se: email = email/ senha=senha???
 		
 	}
-
-
-
 
 	@Override
 	public void logarComGmail() {

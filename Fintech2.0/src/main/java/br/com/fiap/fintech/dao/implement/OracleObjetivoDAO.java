@@ -23,7 +23,7 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	
 	
 	@Override
-	public void criarNovoObjetivo(Objetivo objetivo) throws DBException {
+	public void criarNovoObjetivo(Objetivo objetivo, Usuario usuario) throws DBException {
 	
 		try {
 			
@@ -61,29 +61,35 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	}
 
 	@Override
-	public List<Objetivo> listarObjetivos() {
+	public List<Objetivo> listarObjetivos(Usuario usuario) {
 		
 		List<Objetivo> lista = new ArrayList<Objetivo>();
 		Objetivo objetivo = new Objetivo();
 		
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		
 		try {
+			
+			conexao = ConnectionManager.getInstance().getConnection();
 			
 			String sql = "SELECT * FROM T_FNT_OBJTVO WHERE NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
 			stmt.setInt(1, usuario.getNumeroDeCPF());
 						
 			rs = stmt.executeQuery();
-			
 			while(rs.next()) {
-				objetivo.setCodigoDoObjetivo(rs.getInt("CD_OBJETIVO")); 
-				objetivo.setNomeDoObjetivo(rs.getString("NM_OBJETIVO"));
-				objetivo.setValorDoObjetivo(rs.getDouble("VL_OBJETIVO"));
-				objetivo.setValorAtual(rs.getDouble("VL_ATUAL"));
-				objetivo.setDataDeCriacao(rs.getDate("DT_CRIACAO").toLocalDate());
-				objetivo.setDataDeConclusao(rs.getDate("DT_CONCLUSAO").toLocalDate());
-				objetivo.setDescricaoDoObjetivo(rs.getString("DS_OBJETIVO"));
+				Objetivo objetivoLista = new Objetivo();
 				
-				lista.add(objetivo);
+				objetivoLista.setCodigoDoObjetivo(rs.getInt("CD_OBJETIVO")); 
+				objetivoLista.setNomeDoObjetivo(rs.getString("NM_OBJETIVO"));
+				objetivoLista.setValorDoObjetivo(rs.getDouble("VL_OBJETIVO"));
+				objetivoLista.setValorAtual(rs.getDouble("VL_ATUAL"));
+				objetivoLista.setDataDeCriacao(rs.getDate("DT_CRIACAO").toLocalDate());
+				objetivoLista.setDataDeConclusao(rs.getDate("DT_CONCLUSAO").toLocalDate());
+				objetivoLista.setDescricaoDoObjetivo(rs.getString("DS_OBJETIVO"));
+
+				lista.add(objetivoLista);
 			}
 			
 		} catch(Exception e) {

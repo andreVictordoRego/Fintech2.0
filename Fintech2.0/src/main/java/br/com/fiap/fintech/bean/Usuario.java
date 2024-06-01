@@ -15,8 +15,6 @@ public class Usuario {
 	private File imagemFoto;
 	private String senha;
 	
-	
-	
 	public Usuario() {
 		super();
 	}
@@ -86,16 +84,14 @@ public class Usuario {
 	}
 
 	public void setSenha(String senha) {
-		
-		try { 
-			
-			this.senha = CriptografiaUtils.criptografar(senha);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		String regex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$";
+	    if (senha != null && senha.matches(regex)) {
+	    	try { 
+				this.senha = CriptografiaUtils.criptografar(senha);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	    } 
 	}
-	
-	
 	
 }

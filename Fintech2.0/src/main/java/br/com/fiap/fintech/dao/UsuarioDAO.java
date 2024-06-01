@@ -9,6 +9,6 @@ public interface UsuarioDAO {
 
 	void cadastrarNovoUsuario(Usuario usuario) throws DBException, SQLException;
 	void editarCadastroDoUsuario(Usuario usuario) throws DBException;
-	void alterarSenhaDoUsuario(String novaSenha);
+	void alterarSenhaDoUsuario(String novaSenha, Usuario usuario) throws DBException;
 	boolean isSenhaValida(String senhaParaValidacao);
 }
