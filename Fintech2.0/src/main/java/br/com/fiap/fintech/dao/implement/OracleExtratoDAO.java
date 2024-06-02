@@ -6,7 +6,7 @@ import br.com.fiap.fintech.dao.ExtratoDAO;
 public class OracleExtratoDAO implements ExtratoDAO{
 
 	
-	//******** VERIFICAR
+	//******** VERIFICAR TODOS OS METODOS
 	@Override
 	public Extrato consultarExtrato(Integer numeroDeCPF) {
 		return null;

@@ -13,10 +13,11 @@ public class ObjetivoDAOTeste {
 	public static void main(String[] args) throws DBException {
 				
 		Objetivo obj = new Objetivo();
-		obj.setCodigoDoObjetivo(1);
-		obj.setNomeDoObjetivo("Compra Video Game");
+		obj.setCodigoDoObjetivo(7);
+		obj.setNumeroDeCPF(38580555599L);
+		obj.setNomeDoObjetivo("Compra Ferrari");
 		obj.setValorAtual(00.0);
-		obj.setValorDoObjetivo(5000.0);
+		obj.setValorDoObjetivo(5300.0);
 		obj.setDataDeCriacao(LocalDate.of(2024, 5, 1));
 		obj.setDataDeConclusao(LocalDate.of(2026, 6, 1));
 		obj.setDescricaoDoObjetivo("Descricao completa do produto");
@@ -32,16 +33,8 @@ public class ObjetivoDAOTeste {
 		
 		OracleObjetivoDAO dao = new OracleObjetivoDAO();
 		
-		/*
-		dao.criarNovoObjetivo(obj);
-		System.out.println("Objetivo Cadastrado");
-		
-		dao.editarObjetivo(obj2);
-		System.out.println("editado");
-		 */
-		 
-		List<Objetivo> lista1 = dao.listarObjetivos();
-		for(Objetivo item : lista1) {
+		List<Objetivo> lista = dao.listarObjetivos(obj.getNumeroDeCPF());
+		for(Objetivo item : lista) {
 			System.out.println(
 					"Codigo: " +item.getCodigoDoObjetivo()+ " " +
 							"Nome: " +item.getNomeDoObjetivo()+ " " +
@@ -53,21 +46,32 @@ public class ObjetivoDAOTeste {
 					);
 		}
 		
-		dao.excluirObjetivo("Compra Carro");
-
-		
-		List<Objetivo> lista = dao.listarObjetivos();
-		for(Objetivo item : lista) {
+		dao.excluirObjetivo(obj.getCodigoDoObjetivo());
+		System.out.println("excluido!");
+		 
+		List<Objetivo> lista1 = dao.listarObjetivos(obj.getNumeroDeCPF());
+		for(Objetivo item : lista1) {
 			System.out.println(
 					"Codigo: " +item.getCodigoDoObjetivo()+ " " +
-					"Nome: " +item.getNomeDoObjetivo()+ " " +
-					"Valor Total: " +item.getValorDoObjetivo()+ " " +
-					"Valor Atual: " +item.getValorAtual()+ " " +
-					"Data Criacao: " +item.getDataDeCriacao()+ " " +
-					"Data Conclusao: " +item.getDataDeConclusao()+ " " +
-					"Descricao: " +item.getDescricaoDoObjetivo()
+							"Nome: " +item.getNomeDoObjetivo()+ " " +
+							"Valor Total: " +item.getValorDoObjetivo()+ " " +
+							"Valor Atual: " +item.getValorAtual()+ " " +
+							"Data Criacao: " +item.getDataDeCriacao()+ " " +
+							"Data Conclusao: " +item.getDataDeConclusao()+ " " +
+							"Descricao: " +item.getDescricaoDoObjetivo()
 					);
 		}
+		/*
+		dao.criarNovoObjetivo(obj);
+		System.out.println("Objetivo Cadastrado");
+		
+		dao.editarObjetivo(obj2);		
+		System.out.println("editado");
+		
+
+		 */
+
+		
 		
 		
 		

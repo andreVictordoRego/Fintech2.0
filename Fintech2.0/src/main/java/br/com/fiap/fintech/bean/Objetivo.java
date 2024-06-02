@@ -5,6 +5,7 @@ import java.time.LocalDate;
 public class Objetivo {
 
 	private Integer codigoDoObjetivo;
+	private Long numeroDeCPF;
 	private String nomeDoObjetivo;
 	private Double valorDoObjetivo;
 	private Double valorAtual;
@@ -18,10 +19,11 @@ public class Objetivo {
 
 	}
 
-	public Objetivo(Integer codigoDoObjetivo, String nomeDoObjetivo, Double valorDoObjetivo, Double valorAtual,
+	public Objetivo(Integer codigoDoObjetivo, Long numeroDeCPF, String nomeDoObjetivo, Double valorDoObjetivo, Double valorAtual,
 			LocalDate dataDeCriacao, LocalDate dataDeConclusao, String descricaoDoObjetivo) {
 		super();
 		this.codigoDoObjetivo = codigoDoObjetivo;
+		this.numeroDeCPF = numeroDeCPF;
 		this.nomeDoObjetivo = nomeDoObjetivo;
 		this.valorDoObjetivo = valorDoObjetivo;
 		this.valorAtual = valorAtual;
@@ -37,6 +39,14 @@ public class Objetivo {
 
 	public void setCodigoDoObjetivo(Integer codigoDoObjetivo) {
 		this.codigoDoObjetivo = codigoDoObjetivo;
+	}
+
+	public Long getNumeroDeCPF() {
+		return numeroDeCPF;
+	}
+
+	public void setNumeroDeCPF(Long numeroDeCPF) {
+		this.numeroDeCPF = numeroDeCPF;
 	}
 
 	public String getNomeDoObjetivo() {
