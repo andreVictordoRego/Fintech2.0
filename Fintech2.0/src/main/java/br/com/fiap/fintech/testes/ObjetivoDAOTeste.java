@@ -14,22 +14,49 @@ public class ObjetivoDAOTeste {
 				
 		Objetivo obj = new Objetivo();
 		obj.setCodigoDoObjetivo(1);
-		obj.setNomeDoObjetivo("Compra Casa");
+		obj.setNomeDoObjetivo("Compra Video Game");
 		obj.setValorAtual(00.0);
-		obj.setValorDoObjetivo(750000.0);
+		obj.setValorDoObjetivo(5000.0);
 		obj.setDataDeCriacao(LocalDate.of(2024, 5, 1));
 		obj.setDataDeConclusao(LocalDate.of(2026, 6, 1));
-		obj.setDescricaoDoObjetivo("Descricao completa da casa");
+		obj.setDescricaoDoObjetivo("Descricao completa do produto");
 
+		Objetivo obj2 = new Objetivo();
+		obj2.setCodigoDoObjetivo(3);
+		obj2.setNomeDoObjetivo("Compra PS5");
+		obj2.setValorAtual(10.0);
+		obj2.setValorDoObjetivo(3400.0);
+		obj2.setDataDeCriacao(LocalDate.of(2024, 5, 1));
+		obj2.setDataDeConclusao(LocalDate.of(2026, 6, 1));
+		obj2.setDescricaoDoObjetivo("Descricao completa do PS5");
 		
-		Usuario usuario = new Usuario(65881, "Andre Victor", LocalDate.of(1991, 03, 28), "Masculino", "email@email.com", null, "12X3456");
 		OracleObjetivoDAO dao = new OracleObjetivoDAO();
 		
-		//dao.criarNovoObjetivo(obj, usuario);
-		//System.out.println("Objetivo Cadastrado");
+		/*
+		dao.criarNovoObjetivo(obj);
+		System.out.println("Objetivo Cadastrado");
 		
+		dao.editarObjetivo(obj2);
+		System.out.println("editado");
+		 */
+		 
+		List<Objetivo> lista1 = dao.listarObjetivos();
+		for(Objetivo item : lista1) {
+			System.out.println(
+					"Codigo: " +item.getCodigoDoObjetivo()+ " " +
+							"Nome: " +item.getNomeDoObjetivo()+ " " +
+							"Valor Total: " +item.getValorDoObjetivo()+ " " +
+							"Valor Atual: " +item.getValorAtual()+ " " +
+							"Data Criacao: " +item.getDataDeCriacao()+ " " +
+							"Data Conclusao: " +item.getDataDeConclusao()+ " " +
+							"Descricao: " +item.getDescricaoDoObjetivo()
+					);
+		}
 		
-		List<Objetivo> lista = dao.listarObjetivos(usuario);
+		dao.excluirObjetivo("Compra Carro");
+
+		
+		List<Objetivo> lista = dao.listarObjetivos();
 		for(Objetivo item : lista) {
 			System.out.println(
 					"Codigo: " +item.getCodigoDoObjetivo()+ " " +
@@ -41,6 +68,9 @@ public class ObjetivoDAOTeste {
 					"Descricao: " +item.getDescricaoDoObjetivo()
 					);
 		}
+		
+		
+		
 		
 	}
 

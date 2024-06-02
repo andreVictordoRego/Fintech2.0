@@ -20,9 +20,11 @@ public class UsuarioDAOTeste {
 		
 		OracleUsuarioDAO dao = new OracleUsuarioDAO();
 		
-		/*System.out.println("Criando DAO de cadastro");
+		System.out.println("Criando DAO de cadastro");
 		dao.cadastrarNovoUsuario(usuario);
 		System.out.println("Usuario Cadastrado");
+		
+		/*
 		System.out.println("Criando DAO de edicao");
 		dao.editarCadastroDoUsuario(usuarioTesteEditado);
 		System.out.println("Edicao Concluida");
@@ -32,7 +34,7 @@ public class UsuarioDAOTeste {
 		System.out.println("Alteracao Concluida");*/
 		
 		
-		dao.salvarImagemDoBanco(caminhoImg, usuario);
+		//dao.salvarImagemDoBanco(caminhoImg, usuario);
 		
 	}
 

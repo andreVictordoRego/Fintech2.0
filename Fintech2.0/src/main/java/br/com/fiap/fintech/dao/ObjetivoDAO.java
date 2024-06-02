@@ -8,8 +8,8 @@ import br.com.fiap.fintech.exception.DBException;
 
 public interface ObjetivoDAO {
 
-	public void criarNovoObjetivo(Objetivo objetivo, Usuario usuario) throws DBException;
-	public List<Objetivo> listarObjetivos(Usuario usuario);
+	public void criarNovoObjetivo(Objetivo objetivo) throws DBException;
+	public List<Objetivo> listarObjetivos();
 	public void editarObjetivo(Objetivo objetivo) throws DBException;
 	public void excluirObjetivo(String nomeDoObjetivo) throws DBException;
 }

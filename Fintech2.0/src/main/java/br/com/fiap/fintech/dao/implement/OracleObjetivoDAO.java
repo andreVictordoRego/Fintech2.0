@@ -23,13 +23,15 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	
 	
 	@Override
-	public void criarNovoObjetivo(Objetivo objetivo, Usuario usuario) throws DBException {
+	public void criarNovoObjetivo(Objetivo objetivo) throws DBException {
 	
+		Connection conexao = ConnectionManager.getInstance().getConnection();
+		
 		try {
 			
 			String sql = "INSERT INTO T_FNT_OBJTVO (CD_OBJETIVO, NR_CPF, NM_OBJETIVO, VL_OBJETIVO, VL_ATUAL, DT_CRIACAO, DT_CONCLUSAO, DS_OBJETIVO) VALUES (SQ_TB_OBJTVO.NEXTVAL, ?, ?, ?, ?, ?, ?, ?)";
 			stmt = conexao.prepareStatement(sql);
-			stmt.setInt(1, usuario.getNumeroDeCPF());
+			stmt.setInt(1, 65881);
 			stmt.setString(2, objetivo.getNomeDoObjetivo());
 			stmt.setDouble(3, objetivo.getValorDoObjetivo());
 			stmt.setDouble(4, objetivo.getValorAtual());
@@ -61,13 +63,12 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	}
 
 	@Override
-	public List<Objetivo> listarObjetivos(Usuario usuario) {
-		
+	public List<Objetivo> listarObjetivos() {
+		conexao = ConnectionManager.getInstance().getConnection();
 		List<Objetivo> lista = new ArrayList<Objetivo>();
 		Objetivo objetivo = new Objetivo();
 		
 		PreparedStatement stmt = null;
-		ResultSet rs = null;
 		
 		try {
 			
@@ -75,7 +76,7 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			
 			String sql = "SELECT * FROM T_FNT_OBJTVO WHERE NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
-			stmt.setInt(1, usuario.getNumeroDeCPF());
+			stmt.setInt(1, 65881);
 						
 			rs = stmt.executeQuery();
 			while(rs.next()) {
@@ -116,9 +117,11 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	@Override
 	public void editarObjetivo(Objetivo objetivo) throws DBException {
 		
+		conexao = ConnectionManager.getInstance().getConnection();
+		
 		try {
 			
-			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ? WHERE CD_OBJETIVO = ? AND CPF = ?";
+			String sql = "UPDATE T_FNT_OBJTVO SET NM_OBJETIVO = ?, VL_OBJETIVO = ?, VL_ATUAL = ?, DT_CRIACAO = ?, DT_CONCLUSAO = ?, DS_OBJETIVO = ? WHERE CD_OBJETIVO = ? AND NR_CPF = ?";
 			
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, objetivo.getNomeDoObjetivo());
@@ -128,7 +131,7 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 			stmt.setDate(5, Date.valueOf(objetivo.getDataDeConclusao()));
 			stmt.setString(6, objetivo.getDescricaoDoObjetivo());
 			stmt.setInt(7, objetivo.getCodigoDoObjetivo());
-			stmt.setInt(8, usuario.getNumeroDeCPF());
+			stmt.setInt(8,65881);
 			
 			stmt.executeUpdate();
 			
@@ -156,13 +159,15 @@ public class OracleObjetivoDAO implements ObjetivoDAO{
 	@Override
 	public void excluirObjetivo(String nomeDoObjetivo) throws DBException {
 		
+		Connection conexao = ConnectionManager.getInstance().getConnection();
+		
 		try {
 			
 			String sql = "DELETE FROM T_FNT_OBJTVO WHERE NM_OBJETIVO = ? AND NR_CPF = ?";
 			
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, nomeDoObjetivo);
-			stmt.setInt(2, usuario.getNumeroDeCPF());
+			stmt.setInt(2, 65881);
 			stmt.executeUpdate();
 			
 		} catch (SQLException e) {
