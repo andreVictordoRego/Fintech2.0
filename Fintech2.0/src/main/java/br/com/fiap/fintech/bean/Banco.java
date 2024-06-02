@@ -3,10 +3,10 @@ package br.com.fiap.fintech.bean;
 public enum Banco {
 
 	BRADESCO("Bradesco"),
-	ITAU("Itaú"),
+	ITAU("Itau"),
 	SANTANDER("Santander"),
 	BANCO_DO_BRASIL("Banco do Brasil"),
-	CAIXA_ECONOMICA("Caixa Econômica"),
+	CAIXA_ECONOMICA("Caixa Economica"),
 	NUBANK("Nubank"),
 	NEXT("Next"),
 	INTER("Inter"),

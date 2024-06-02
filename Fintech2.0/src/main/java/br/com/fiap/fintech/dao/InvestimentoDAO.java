@@ -10,6 +10,6 @@ public interface InvestimentoDAO {
 	void cadastrarNovoInvestimento(Investimento investimento) throws DBException;
 	List<Investimento> listarInvestimentos();
 	void editarInvestimento(Investimento investimento) throws DBException;
-	void excluirInvestimento(String nomeDoInvestimento);
+	void excluirInvestimento(String nomeDoInvestimento) throws DBException;
 	Boolean fecharInvestimento(Integer codigoDoInvestimento);
 }

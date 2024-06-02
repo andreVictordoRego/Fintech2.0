@@ -2,7 +2,7 @@ package br.com.fiap.fintech.bean;
 
 public enum TipoDeInvestimento {
 	
-	POUPANCA("Poupança"),
+	POUPANCA("Poupanca"),
 	TESOURO_DIRETO("Tesouro Direto"),
 	CDB("CDB"),
 	CRI("CRI"),

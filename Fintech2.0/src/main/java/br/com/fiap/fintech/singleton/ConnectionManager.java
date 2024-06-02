@@ -8,7 +8,7 @@ public class ConnectionManager {
 	private static ConnectionManager connectionManager;
 	
 	private ConnectionManager() {
-		super();
+
 	}
 	
 	public static ConnectionManager getInstance() {
