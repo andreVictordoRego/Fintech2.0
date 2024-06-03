@@ -7,7 +7,7 @@ import br.com.fiap.fintech.util.CriptografiaUtils;
 
 public class Usuario {
 
-	private Integer numeroDeCPF;
+	private Long numeroDeCPF;
 	private String nomeCompleto;
 	private LocalDate dataDeNascimento;
 	private String genero;
@@ -19,7 +19,7 @@ public class Usuario {
 		super();
 	}
 
-	public Usuario(Integer numeroDeCPF, String nomeCompleto, LocalDate dataDeNascimento, String genero, String email,
+	public Usuario(Long numeroDeCPF, String nomeCompleto, LocalDate dataDeNascimento, String genero, String email,
 			File imagemFoto, String senha) {
 		super();
 		this.numeroDeCPF = numeroDeCPF;
@@ -31,11 +31,11 @@ public class Usuario {
 		setSenha(senha);
 	}
 
-	public Integer getNumeroDeCPF() {
+	public Long getNumeroDeCPF() {
 		return numeroDeCPF;
 	}
 
-	public void setNumeroDeCPF(Integer numeroDeCPF) {
+	public void setNumeroDeCPF(Long numeroDeCPF) {
 		this.numeroDeCPF = numeroDeCPF;
 	}
 

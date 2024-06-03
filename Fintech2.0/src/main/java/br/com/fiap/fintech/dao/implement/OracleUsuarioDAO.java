@@ -1,6 +1,6 @@
 package br.com.fiap.fintech.dao.implement;
 
-import java.io.File; 
+import java.io.File;  
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,17 +9,13 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import br.com.fiap.fintech.bean.Usuario;
 import br.com.fiap.fintech.dao.LoginDAO;
 import br.com.fiap.fintech.dao.UsuarioDAO;
 import br.com.fiap.fintech.exception.DBException;
 import br.com.fiap.fintech.singleton.ConnectionManager;
 import java.io.InputStream;
-
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
@@ -27,7 +23,6 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 
 	private Connection conexao;
 	private PreparedStatement stmt;
-	private ResultSet rs;
 	
 	@Override
 	public void cadastrarNovoUsuario(Usuario usuario) throws DBException, SQLException {
@@ -45,7 +40,7 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        conexao.setAutoCommit(false);
 
 	        stmtUsuario = conexao.prepareStatement(sqlUsuario);
-	        stmtUsuario.setInt(1, usuario.getNumeroDeCPF());
+	        stmtUsuario.setLong(1, usuario.getNumeroDeCPF());
 	        stmtUsuario.setString(2, usuario.getNomeCompleto());
 	        stmtUsuario.setDate(3, Date.valueOf(usuario.getDataDeNascimento()));
 	        stmtUsuario.setString(4, usuario.getGenero());
@@ -68,7 +63,7 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	        }
 	        
 	        stmtLogin = conexao.prepareStatement(sqlLogin);
-	        stmtLogin.setInt(1, usuario.getNumeroDeCPF());
+	        stmtLogin.setLong(1, usuario.getNumeroDeCPF());
 	        
 	        if (isSenhaValida(usuario.getSenha())) {
 	        	stmtLogin.setString(2, usuario.getSenha());
@@ -123,20 +118,18 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 			
 			File arquivoImagem = usuario.getImagemFoto();
 	        if (arquivoImagem != null) {
-	            try (InputStream inputStream = new FileInputStream(arquivoImagem)) {
-	                stmt.setBinaryStream(5, inputStream, (int) arquivoImagem.length());
+	            try {
+	                InputStream inputStream = new FileInputStream(arquivoImagem);
+	                stmt.setBinaryStream(5, inputStream);
 	            } catch (FileNotFoundException e) {
 	                e.printStackTrace();
 	                throw new DBException("Erro ao carregar o arquivo de imagem.", e);
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	                throw new DBException("Erro ao ler o arquivo de imagem.", e);
 	            }
 	        } else {
 	            stmt.setNull(5, java.sql.Types.BLOB);
-	        }	
+	        }
 	        
-	        stmt.setInt(6, usuario.getNumeroDeCPF());
+	        stmt.setLong(6, usuario.getNumeroDeCPF());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -179,7 +172,7 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 				stmt = conexao.prepareStatement(sql);
 				usuario.setSenha(novaSenha);
 				stmt.setString(1, usuario.getSenha());
-				stmt.setInt(2, usuario.getNumeroDeCPF());
+				stmt.setLong(2, usuario.getNumeroDeCPF());
 				
 				stmt.executeUpdate();
 				
@@ -207,7 +200,8 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 		}
 
 //***************************************************************************************
-	  public void salvarImagemDoBanco(String caminhoDestino, Usuario usuario) throws DBException {
+	
+public void salvarImagemDoBanco(String caminhoDestino, Usuario usuario) throws DBException {
 	        Connection conexao = null;
 	        PreparedStatement stmt = null;
 	        ResultSet rs = null;
@@ -218,7 +212,7 @@ public class OracleUsuarioDAO implements UsuarioDAO, LoginDAO{
 	            String sql = "SELECT IM_FOTO FROM T_FNT_USUARIO WHERE NR_CPF = ?";
 	            stmt = conexao.prepareStatement(sql);
 
-	            stmt.setInt(1, usuario.getNumeroDeCPF());
+	            stmt.setLong(1, usuario.getNumeroDeCPF());
 
 	            rs = stmt.executeQuery();
 	            

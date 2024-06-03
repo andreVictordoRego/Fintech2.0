@@ -2,11 +2,10 @@ package br.com.fiap.fintech.testes;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import br.com.fiap.fintech.bean.Objetivo;
-import br.com.fiap.fintech.bean.Usuario;
-import br.com.fiap.fintech.dao.implement.OracleObjetivoDAO;
+import br.com.fiap.fintech.dao.ObjetivoDAO;
 import br.com.fiap.fintech.exception.DBException;
+import br.com.fiap.fintech.factory.DAOFactory;
 
 public class ObjetivoDAOTeste {
 
@@ -31,7 +30,7 @@ public class ObjetivoDAOTeste {
 		obj2.setDataDeConclusao(LocalDate.of(2026, 6, 1));
 		obj2.setDescricaoDoObjetivo("Descricao completa do PS5");
 		
-		OracleObjetivoDAO dao = new OracleObjetivoDAO();
+		ObjetivoDAO dao = DAOFactory.getObjetivoDAO();
 		
 		List<Objetivo> lista = dao.listarObjetivos(obj.getNumeroDeCPF());
 		for(Objetivo item : lista) {
@@ -61,21 +60,13 @@ public class ObjetivoDAOTeste {
 							"Descricao: " +item.getDescricaoDoObjetivo()
 					);
 		}
-		/*
+		
 		dao.criarNovoObjetivo(obj);
 		System.out.println("Objetivo Cadastrado");
 		
 		dao.editarObjetivo(obj2);		
 		System.out.println("editado");
-		
 
-		 */
-
-		
-		
-		
-		
-		
 	}
 
 }
