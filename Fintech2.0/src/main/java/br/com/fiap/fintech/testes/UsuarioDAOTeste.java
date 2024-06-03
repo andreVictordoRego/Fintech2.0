@@ -21,7 +21,6 @@ public class UsuarioDAOTeste {
 		
 		UsuarioDAO dao = new OracleUsuarioDAO();
 		
-		
 		System.out.println("Criando DAO de cadastro");
 		dao.cadastrarNovoUsuario(usuario);
 		System.out.println("Usuario Cadastrado");
