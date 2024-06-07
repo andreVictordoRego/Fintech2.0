@@ -9,7 +9,6 @@ public class InvestimentoAberto {
 	private Integer chavePrimariaEstrantrangeira;
 	
 	public InvestimentoAberto() {
-		super();
 	}
 
 	public InvestimentoAberto(LocalDate mes, Double valorTotalDoRendimento) {

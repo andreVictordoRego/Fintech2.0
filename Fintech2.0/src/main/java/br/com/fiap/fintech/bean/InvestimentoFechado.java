@@ -9,7 +9,7 @@ public class InvestimentoFechado {
 	private Integer chavePrimariaEstrantrangeira;
 	
 	public InvestimentoFechado() {
-		super();
+		
 	}
 
 	public InvestimentoFechado(LocalDate dataDeSaida, Double valorDaLiquidez) {
