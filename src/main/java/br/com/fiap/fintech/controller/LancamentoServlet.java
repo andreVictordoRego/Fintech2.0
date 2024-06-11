@@ -1,11 +1,11 @@
 package br.com.fiap.fintech.controller;
 
+import java.io.IOException;
+
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Servlet implementation class LancamentoServlet
@@ -16,10 +16,8 @@ public class LancamentoServlet extends HttpServlet {
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public LancamentoServlet() {
-        super();
         // TODO Auto-generated constructor stub
-    }
+    
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
