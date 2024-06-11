@@ -22,7 +22,7 @@ public class TesteInvestimentoDAO {
 		//Cadastrar um investimento
 		Investimento investimento = new Investimento(
 				1,
-				"Investimento G",
+				"Investimento C",
 				TipoDeInvestimento.LCA,
 				Banco.CAIXA_ECONOMICA,
 				1.,
@@ -31,6 +31,7 @@ public class TesteInvestimentoDAO {
 				2500.0);
 		try {
 			//dao.cadastrarNovoInvestimento(investimento);
+			System.out.println("1");
 			dao.lancarNovoInvestimentoAberto(investimento);
 			System.out.println("Investimento cadastrado!");
 		} catch (DBException e) {
@@ -38,9 +39,9 @@ public class TesteInvestimentoDAO {
 		}
 		
 		
-//		//Buscar um produto pelo codigo e editar
-//		Investimento investimento = new Investimento(18,
-//				"Investimento H",
+		//Buscar um produto pelo codigo e editar
+//		Investimento investimento = new Investimento(39,
+//				"Investimento Ka",
 //				TipoDeInvestimento.LCI,
 //				Banco.INTER,
 //				5.,
@@ -51,8 +52,8 @@ public class TesteInvestimentoDAO {
 //		dao.editarInvestimento(investimento);
 //		
 //		System.out.println("Invetimento Editado.");
-//		
-//		//Listar investimentos
+		
+		//Listar investimentos
 //		List<Investimento> lista = dao.listarInvestimentos();
 //		for(Investimento item : lista) {
 //			System.out.println(item.getNomeDoInvestimento() + " " 
@@ -65,9 +66,9 @@ public class TesteInvestimentoDAO {
 //		}
 
 		
-//		//Remover um investimento
+		//Remover um investimento
 //		try {
-//			dao.excluirInvestimento("Investimento A");
+//			dao.excluirInvestimento("Investimento Ka");
 //			System.out.println("Investimento Excluido.");
 //		} catch(DBException e) {
 //			e.printStackTrace();
@@ -77,7 +78,7 @@ public class TesteInvestimentoDAO {
 		//Registrar um Fechamento e Excluir do Invetimento Aberto
 		
 //		InvestimentoAberto investimentoAberto = new InvestimentoAberto();
-//		investimentoAberto.setChavePrimariaEstrantrangeira(34);
+//		investimentoAberto.setChavePrimariaEstrantrangeira(41);
 //		investimentoAberto.setMes(LocalDate.of(2023, 03, 15));
 //		investimentoAberto.setValorTotalDoRendimento(0.0);
 //		

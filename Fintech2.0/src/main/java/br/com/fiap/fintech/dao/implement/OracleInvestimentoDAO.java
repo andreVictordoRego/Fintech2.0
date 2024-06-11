@@ -70,8 +70,7 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 	@Override
 	public void lancarNovoInvestimentoAberto(Investimento investimento) throws SQLException, DBException {
 		
-		Connection conexao = ConnectionManager.getInstance().getConnection();
-		
+		conexao = ConnectionManager.getInstance().getConnection();
 		PreparedStatement stmtBuscaCodigo = null;
 		PreparedStatement stmtInvestimentoAberto = null;
 		ResultSet rsBuscaCodigo = null;
@@ -82,19 +81,17 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 		String sqlInvestimentoAberto = "INSERT INTO T_FNT_INV_ABRTO (CD_INVESTIMENTO, DT_MES, VL_TOTAL_RENT) VALUES (?, ?, ?)";
 		
 		try {
-			//conexao.setAutoCommit(false);
+			conexao.setAutoCommit(false);
 			
 			stmtBuscaCodigo = conexao.prepareStatement(sqlConsultaCodigo);
 
-			System.out.println("1");
 			stmtBuscaCodigo.setString(1, investimento.getNomeDoInvestimento());
-			System.out.println("1");
 			rsBuscaCodigo = stmtBuscaCodigo.executeQuery();
 			
-			
 			if(rsBuscaCodigo.next()) {
-				System.out.println("if");
+				System.out.println("2");
 				codigo = rsBuscaCodigo.getInt("CD_INVESTIMENTO");
+				System.out.println("2");
 			}
 			
 					
@@ -114,8 +111,10 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 			throw new DBException("Erro ao cadastrar investimento.");
 		} finally {
 			try {
-			if (stmtInvestimentoAberto!= null) stmtInvestimentoAberto.close();
-			if (conexao != null) conexao.close();
+				if(stmtBuscaCodigo!= null) stmtBuscaCodigo.close();
+				if (stmtInvestimentoAberto!= null) stmtInvestimentoAberto.close();
+				if(rsBuscaCodigo!= null) rsBuscaCodigo.close();
+				if (conexao != null) conexao.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -133,7 +132,8 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 
 		try {
 			stmt = conexao.prepareStatement("SELECT * FROM T_FNT_INVST WHERE NR_CPF = ?");
-			stmt.setLong(1, usuario.getNumeroDoCPF);
+			//stmt.setLong(1, usuario.getNumeroDoCPF);
+			stmt.setLong(1, 41300);
 
 			rs = stmt.executeQuery();
 
@@ -166,6 +166,13 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 					e.printStackTrace();
 				}
 			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			if (conexao != null) {
 				try {
 					conexao.close();
@@ -193,7 +200,8 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 			stmt.setString(6, investimento.getTipoDeInvestimento().getTipoDeInvestimento());
 			stmt.setString(7, investimento.getBanco().getBanco());
 			stmt.setInt(8, investimento.getCodigoDoInvestimento());
-			stmt.setLong(9, usuario.getNumeroDoCPF);
+			//stmt.setLong(9, usuario.getNumeroDoCPF);
+			stmt.setLong(9, 41300);
 			
 			stmt.executeUpdate();
 			
@@ -218,11 +226,35 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 		}
 	}
 
+	@Override
 	public void excluirInvestimento(String nomeDoInvestimento) {
 		
 		conexao = ConnectionManager.getInstance().getConnection();
+		
+		PreparedStatement stmtAberto = null;
+		PreparedStatement stmtFechado = null;
 
 		try {
+			String sqlInvAberto = "DELETE FROM T_FNT_INV_ABRTO WHERE CD_INVESTIMENTO IN (SELECT CD_INVESTIMENTO FROM T_FNT_INVST WHERE NM_APLICACAO = ? AND NR_CPF = ?)";
+			stmtAberto = conexao.prepareStatement(sqlInvAberto);
+			
+			stmtAberto.setString(1, nomeDoInvestimento);
+			//stmtAberto.setLong(2, usuario.getNumeroDoCPF);
+			stmtAberto.setLong(2, 41300);
+			
+			stmtAberto.executeUpdate();
+			
+			String sqlFechado = "DELETE FROM T_FNT_INV_FCHDO WHERE CD_INVESTIMENTO IN (SELECT CD_INVESTIMENTO FROM T_FNT_INVST WHERE NM_APLICACAO = ? AND NR_CPF = ?)";
+			
+			stmtFechado = conexao.prepareStatement(sqlFechado);
+			
+			stmtFechado.setString(1, nomeDoInvestimento);
+			//stmtFechado.setLong(2, usuario.getNumeroDoCPF);
+			stmtFechado.setLong(2, 41300);
+			
+			stmtFechado.executeUpdate();
+			
+			
 			String sql = "DELETE FROM T_FNT_INVST WHERE NM_APLICACAO = ? AND NR_CPF = ?";
 			stmt = conexao.prepareStatement(sql);
 			stmt.setString(1, nomeDoInvestimento);
@@ -241,6 +273,20 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 					e.printStackTrace();
 				}
 			}
+			if (stmtAberto != null) {
+				try {
+					stmtAberto.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (stmtFechado != null) {
+				try {
+					stmtFechado.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 			if (conexao != null) {
 				try {
 					conexao.close();
@@ -251,6 +297,82 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 		}
 	}
 	
+	@Override
+	public void excluirInvestimentoAberto(String nomeDoInvestimento) {
+		
+		conexao = ConnectionManager.getInstance().getConnection();
+		
+		PreparedStatement stmtAberto = null;
+
+		try {
+			String sqlInvAberto = "DELETE FROM T_FNT_INV_ABRTO WHERE CD_INVESTIMENTO IN (SELECT CD_INVESTIMENTO FROM T_FNT_INVST WHERE NM_APLICACAO = ? AND NR_CPF = ?)";
+			stmtAberto = conexao.prepareStatement(sqlInvAberto);
+			
+			stmtAberto.setString(1, nomeDoInvestimento);
+			//stmtAberto.setLong(2, usuario.getNumeroDoCPF);
+			stmtAberto.setLong(2, 41300);
+			
+			stmtAberto.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (stmtAberto != null) {
+				try {
+					stmtAberto.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void excluirInvestimentoFechado(String nomeDoInvestimento) {
+		
+		conexao = ConnectionManager.getInstance().getConnection();
+		
+		PreparedStatement stmtFechado = null;
+
+		try {			
+			String sqlFechado = "DELETE FROM T_FNT_INV_FCHDO WHERE CD_INVESTIMENTO IN (SELECT CD_INVESTIMENTO FROM T_FNT_INVST WHERE NM_APLICACAO = ? AND NR_CPF = ?)";
+			
+			stmtFechado = conexao.prepareStatement(sqlFechado);
+			
+			stmtFechado.setString(1, nomeDoInvestimento);
+			//stmtFechado.setLong(2, usuario.getNumeroDoCPF);
+			stmtFechado.setLong(2, 41300);
+			
+			stmtFechado.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (stmtFechado != null) {
+				try {
+					stmtFechado.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	@Override
 	public List<InvestimentoAberto> listarInvestimentosAbertos(Integer codigoDoinvestimento) {
 		List<InvestimentoAberto> investimentosAbertos = new ArrayList<InvestimentoAberto>();
 		InvestimentoAberto investimentoAberto;
@@ -272,12 +394,35 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 		} catch(SQLException e) {
 			System.err.println("ERRO AO LISTAR INVESTIMENTOS ABERTOS");
 			e.printStackTrace();
+		} finally {
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			if (conexao != null) {
+				try {
+					conexao.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		return investimentosAbertos;
 	}
 	
-	public void registrarFechamentoDeInvestimento(InvestimentoAberto investimentoAberto) {
+	@Override
+	public void registrarFechamentoDeInvestimento(InvestimentoAberto investimentoAberto) throws SQLException {
 		
 		conexao = ConnectionManager.getInstance().getConnection();
 		PreparedStatement stmt = null;
@@ -296,10 +441,17 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 		} catch(SQLException e) {
 			System.err.println("ERRO AO REGISTRAR FECHAMENTO");
 			e.printStackTrace();
+		} finally {
+			if(stmt!= null) {
+				stmt.close();
+			}
+			if(conexao!= null) {
+				conexao.close();
+			}
 		}
 	}
 	
-	public Boolean fecharInvestimento(Integer codigoDoInvestimento) {
+	public Boolean fecharInvestimento(Integer codigoDoInvestimento) throws SQLException {
 		String sqlQuery = "DELETE FROM T_FNT_INV_ABRTO "
 				+ "WHERE cd_investimento = ?";
 		
@@ -312,6 +464,13 @@ public class OracleInvestimentoDAO implements InvestimentoDAO {
 			System.err.println("ERRO AO EXCLUIR INVESTIMENTO PARA FECHAMENTO");
 			e.printStackTrace();
 			return false;
+		} finally {
+			if(stmt != null) {
+				stmt.close();
+			}
+			if(conexao != null) {
+				conexao.close();
+			}
 		}
 	}
 

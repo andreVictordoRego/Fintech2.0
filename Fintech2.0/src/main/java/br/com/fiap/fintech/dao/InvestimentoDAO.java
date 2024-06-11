@@ -14,7 +14,9 @@ public interface InvestimentoDAO {
 	void editarInvestimento(Investimento investimento) throws DBException;
 	void excluirInvestimento(String nomeDoInvestimento) throws DBException;
 	List<InvestimentoAberto> listarInvestimentosAbertos(Integer codigoDoinvestimento);
-	void registrarFechamentoDeInvestimento(InvestimentoAberto investimentoAberto);
-	Boolean fecharInvestimento(Integer codigoDoInvestimento);
+	void registrarFechamentoDeInvestimento(InvestimentoAberto investimentoAberto) throws SQLException;
+	Boolean fecharInvestimento(Integer codigoDoInvestimento) throws SQLException;
 	void lancarNovoInvestimentoAberto(Investimento investimento) throws SQLException, DBException;
+	void excluirInvestimentoAberto(String nomeDoInvestimento);
+	void excluirInvestimentoFechado(String nomeDoInvestimento);
 }
